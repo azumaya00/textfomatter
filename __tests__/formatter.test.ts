@@ -179,4 +179,60 @@ describe("formatText - 単体テスト", () => {
     const options = createOptions({ removePunctuationAfterQuotes: true });
     expect(formatText(input, options)).toBe("純粋なテキスト");
   });
+
+  describe("Performance Test", () => {
+    it("大きなテキストのパフォーマンスチェック", () => {
+      const generateLargeText = (length: number): string => {
+        // 仮の日本語テキストを生成（20万文字）
+        const japaneseText = [
+          "「こんにちは！今日はいい天気ですね。」と誰かが話しかけてくる。",
+          "「お元気ですか！？」あなたの好きなことは何ですか？",
+          "こちらは最近忙しい日々が続いていますが、元気です！",
+          "日本語のテキスト生成は、面白いですね。貴方も何か、良さそうなサンプルを作ってみませんか？",
+          "では、また今度お会いしましょう！…そう言うと彼は、さっさと去って行った。",
+        ];
+
+        let text = "";
+        // 指定した文字数まで繰り返して日本語テキストを生成
+        while (text.length < length) {
+          // 日本語のテキストと改行をランダムに繰り返す
+          text +=
+            japaneseText[Math.floor(Math.random() * japaneseText.length)] +
+            "\n";
+        }
+        return text.slice(0, length); // 指定した長さでカット
+      };
+
+      // 100文字のテキストと20万字のテキストを生成
+      const smallText = generateLargeText(100);
+      const largeText = generateLargeText(200000);
+
+      // オプションを設定（すべてのフォーマットをオンにする例）
+      const options = {
+        convertFullWidthToHalfWidth: true,
+        convertHalfWidthToFullWidth: true,
+        removePunctuationAfterQuotes: true,
+        insertSpaceAfterExclamations: true,
+        ensureEvenPunctuationCount: true,
+        insertSpaceAtLineStart: true,
+      };
+
+      let totalTime = 0;
+      const iterations = 5;
+
+      // 小さいテキストのパフォーマンス計測
+      console.time("Small Text Formatting");
+      for (let i = 0; i < iterations; i++) {
+        formatText(smallText, options);
+      }
+      console.timeEnd("Small Text Formatting");
+
+      // 大きなテキストのパフォーマンス計測
+      console.time("Large Text Formatting");
+      for (let i = 0; i < iterations; i++) {
+        formatText(largeText, options);
+      }
+      console.timeEnd("Large Text Formatting");
+    });
+  });
 });

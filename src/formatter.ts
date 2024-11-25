@@ -10,36 +10,44 @@ export interface FormatOptions {
 export const formatText = (text: string, options: FormatOptions): string => {
   let formattedText = text;
 
+  // 必要なオプションをオンにして処理をまとめる
+  const operations = [];
+
   if (options.convertFullWidthToHalfWidth) {
-    formattedText = convertFullWidthToHalfWidth(formattedText);
+    operations.push(convertFullWidthToHalfWidth);
   }
   if (options.convertHalfWidthToFullWidth) {
-    formattedText = convertHalfWidthToFullWidth(formattedText);
+    operations.push(convertHalfWidthToFullWidth);
   }
   if (options.removePunctuationAfterQuotes) {
-    formattedText = removePunctuationAfterQuotes(formattedText);
+    operations.push(removePunctuationAfterQuotes);
   }
   if (options.insertSpaceAfterExclamations) {
-    formattedText = insertSpaceAfterMixedExclamations(formattedText);
+    operations.push(insertSpaceAfterMixedExclamations);
   }
   if (options.ensureEvenPunctuationCount) {
-    formattedText = ensureEvenPunctuationCount(formattedText);
+    operations.push(ensureEvenPunctuationCount);
   }
   if (options.insertSpaceAtLineStart) {
-    formattedText = insertSpaceAtLineStart(formattedText);
+    operations.push(insertSpaceAtLineStart);
+  }
+
+  // 各フォーマットを一度に処理する
+  for (const operation of operations) {
+    formattedText = operation(formattedText);
   }
 
   return formattedText;
 };
 
-// 英数字を全角から半角に変換
+// 全角英数字を半角に変換
 const convertFullWidthToHalfWidth = (text: string): string => {
   return text.replace(/[Ａ-Ｚａ-ｚ０-９]/g, (char) =>
     String.fromCharCode(char.charCodeAt(0) - 0xfee0)
   );
 };
 
-// !?()を半角から全角に変換
+// 半角!?()を全角に変換
 const convertHalfWidthToFullWidth = (text: string): string => {
   return text.replace(/[!?()]/g, (char) =>
     char === "!" ? "！" : char === "?" ? "？" : char === "(" ? "（" : "）"
@@ -49,50 +57,41 @@ const convertHalfWidthToFullWidth = (text: string): string => {
 // 「」『』（）()の終わりにある句読点を削除
 const removePunctuationAfterQuotes = (text: string): string => {
   return text.replace(/([「『（\(].*?[」』）\)])/gu, (match) => {
-    // 終了記号の前に句読点（、。やピリオド）がある場合、それを削除
-    const cleaned = match.replace(
+    return match.replace(
       /([、。\.])([」』）\)])/gu,
       (innerMatch, punctuation, closingBracket) => {
         return closingBracket; // 句読点を削除して終了記号のみ返す
       }
     );
-    return cleaned;
   });
 };
 
 // 行末以外、!?の後に全角スペースを挿入
 const insertSpaceAfterMixedExclamations = (text: string): string => {
-  const regex = /([!！\?？]{1,})(?![」』）\)]|$|　)/gu;
-  let match: RegExpExecArray | null;
+  return text.replace(
+    /([!！\?？]{1,})(?=\S(?![」』）\)]|$))/gu,
+    (match, p1, offset, string) => {
+      const nextCharIndex = offset + p1.length;
+      const nextChar = string[nextCharIndex];
 
-  // 正規表現でマッチする部分を探す
-  while ((match = regex.exec(text)) !== null) {
+      // 行末や閉じ括弧の後にはスペースを挿入しない
+      if (
+        nextChar === "\n" ||
+        nextChar === "\r" ||
+        nextChar === undefined ||
+        ["」", "』", "）", ")"].includes(nextChar)
+      ) {
+        return match;
+      }
 
-    const nextCharIndex = match.index + match[0].length;
-    const nextChar =
-      nextCharIndex < text.length ? text[nextCharIndex] : undefined;
-
-    // 次の文字が改行、復帰、閉じ括弧、または閉じ括弧の後であればスペースを追加しない
-    if (
-      nextChar === "\n" ||
-      nextChar === "\r" ||
-      nextChar === undefined ||
-      ["」", "』", "）", ")"].includes(nextChar) ||
-      ["？", "」"].includes(nextChar)
-    ) {
-      continue;
+      return match + "　"; // スペースを挿入
     }
-
-    // 正常な場合はスペースを挿入
-    text = text.slice(0, nextCharIndex) + "　" + text.slice(nextCharIndex);
-  }
-
-  return text;
+  );
 };
 
 // …―の連続が奇数個の場合偶数個にする
 const ensureEvenPunctuationCount = (text: string): string => {
-  // まず連続する…を処理
+  // 連続する…を処理
   text = text.replace(/[…]+/g, (match) => {
     if (match.length % 2 !== 0) {
       return match + "…";
