@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Formatter Test</title>
+</head>
+<body>
+  <h1>Text Formatter Test</h1>
+
+  <h2>入力テキスト</h2>
+  <textarea id="inputText" rows="10" cols="50" placeholder="ここにテキストを入力してください"></textarea>
+  
+  <h2>フォーマットオプション</h2>
+  <form id="optionsForm">
+    <label>
+      <input type="checkbox" id="convertFullWidthToHalfWidth" checked>
+      英数字を全角から半角に変換
+    </label><br>
+    <label>
+      <input type="checkbox" id="convertHalfWidthToFullWidth" checked>
+      !?()を半角から全角に変換
+    </label><br>
+    <label>
+      <input type="checkbox" id="removePunctuationAfterQuotes" checked>
+      「」『』（）()の終わりにある句読点を削除
+    </label><br>
+    <label>
+      <input type="checkbox" id="insertSpaceAfterExclamations" checked>
+      行末以外、!?の後に全角スペースを挿入
+    </label><br>
+    <label>
+      <input type="checkbox" id="ensureEvenPunctuationCount" checked>
+      …―の連続が奇数個の場合偶数個にする
+    </label><br>
+    <label>
+      <input type="checkbox" id="insertSpaceAtLineStart" checked>
+      文頭に全角スペースを挿入
+    </label>
+  </form>
+  
+  <button id="formatButton">フォーマットを実行</button>
+
+  <h2>フォーマット結果</h2>
+  <textarea id="outputText" rows="10" cols="50" readonly placeholder="フォーマット結果がここに表示されます"></textarea>
+
+  <script type="module" src="index.js"></script>
+</body>
+</html>
