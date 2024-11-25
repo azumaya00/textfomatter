@@ -1,0 +1,21 @@
+# Node.js dependencies
+node_modules/
+
+# TypeScript output
+/dist
+/*.js
+/*.d.ts
+/*.d.ts.map
+
+# IDE configuration files (optional)
+.idea/
+.vscode/
+
+# npm package lock file (optional)
+package-lock.json
+
+# MacOS specific files
+.DS_Store
+
+# Log files
+*.log

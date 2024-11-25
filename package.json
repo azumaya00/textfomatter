@@ -1,0 +1,44 @@
+{
+  "name": "jp-novel-formatter",
+  "version": "1.0.0",
+  "description": "A library for formatting Japanese novels into a horizontal writing style format. 日本語の小説を横書き形式に合わせてフォーマットするライブラリです。",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "serve": "live-server --open=examples",
+    "dev": "npm-run-all --parallel watch serve",
+    "test": "jest"
+  },
+  "keywords": [
+    "japanese",
+    "novel",
+    "formatter",
+    "text",
+    "horizontal",
+    "日本語",
+    "小説",
+    "フォーマッター",
+    "テキスト",
+    "横書き"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azumaya00/textfomatter"
+  },
+  "homepage": "https://github.com/azumaya00/textfomatter",
+  "author": "RIE <riekubocchi@gmail.com>",
+  "license": "MIT",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.9.3",
+    "jest": "^29.7.0",
+    "live-server": "^1.2.2",
+    "npm-run-all": "^4.1.5",
+    "ts-jest": "^29.2.5",
+    "typescript": "^5.7.2"
+  }
+}
