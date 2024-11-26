@@ -107,6 +107,14 @@ const ensureEvenPunctuationCount = (text: string): string => {
     return match;
   });
 
+  // 次に連続する—を処理
+  text = text.replace(/[—]+/g, (match) => {
+    if (match.length % 2 !== 0) {
+      return match + "—";
+    }
+    return match;
+  });
+
   return text;
 };
 

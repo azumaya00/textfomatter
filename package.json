@@ -1,6 +1,6 @@
 {
   "name": "jp-novel-formatter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A library for formatting Japanese novels into a horizontal writing style format. 日本語の小説を横書き形式に合わせてフォーマットするライブラリです。",
   "main": "dist/index.js",
   "scripts": {

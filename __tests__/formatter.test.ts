@@ -125,21 +125,21 @@ describe("formatText - 単体テスト", () => {
   });
 
   it("ensureEvenPunctuationCount: 奇数個の…や―を偶数個に揃える", () => {
-    const input = "……―………";
+    const input = "……―………—";
     const options = createOptions({ ensureEvenPunctuationCount: true });
-    expect(formatText(input, options)).toBe("……――…………");
+    expect(formatText(input, options)).toBe("……――…………——");
   });
 
   it("ensureEvenPunctuationCount: 偶数個の場合は変更しない", () => {
-    const input = "……――……";
+    const input = "……――……——";
     const options = createOptions({ ensureEvenPunctuationCount: true });
-    expect(formatText(input, options)).toBe("……――……");
+    expect(formatText(input, options)).toBe("……――……——");
   });
 
   it("ensureEvenPunctuationCount: 単独の…や―も正しく処理する", () => {
-    const input = "…―";
+    const input = "…―—";
     const options = createOptions({ ensureEvenPunctuationCount: true });
-    expect(formatText(input, options)).toBe("……――");
+    expect(formatText(input, options)).toBe("……――——");
   });
 
   it("insertSpaceAtLineStart: 文頭に全角スペースを挿入する", () => {
