@@ -162,6 +162,12 @@ describe("formatText - 単体テスト", () => {
     expect(formatText(input, options)).toBe("　行1\n　行2\n　行3");
   });
 
+  it("insertSpaceAtLineStart: 既に文頭が字下げになっている場合は更に下げない", () => {
+    const input = "　行1\n行2\n行3";
+    const options = createOptions({ insertSpaceAtLineStart: true });
+    expect(formatText(input, options)).toBe("　行1\n　行2\n　行3");
+  });
+
   it("異常系: 空文字を処理する", () => {
     const input = "";
     const options = createOptions();

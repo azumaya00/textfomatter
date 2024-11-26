@@ -77,5 +77,15 @@ const ensureEvenPunctuationCount = (text) => {
 };
 // 文頭に全角スペースを挿入（ただし「」『』（）()の文頭は除外）
 const insertSpaceAtLineStart = (text) => {
-    return text.replace(/^(?![「『（(])./gm, "　$&");
+    return text.replace(/^([^\n])/gm, (match, p1, offset, string) => {
+        // 文頭にすでに全角スペースがある場合は挿入しない
+        if (match === "　") {
+            return match; // 既に字下げがあればそのまま返す
+        }
+        // 引用符や括弧の文頭にはスペースを挿入しない
+        if (["「", "『", "（", "("].includes(p1)) {
+            return match; // 引用符や括弧の文頭ならそのまま返す
+        }
+        return "　" + match; // 文頭にスペースを挿入
+    });
 };
