@@ -56,20 +56,37 @@ const convertHalfWidthToFullWidth = (text: string): string => {
 
 // 「」『』（）()の終わりにある句読点を削除
 const removePunctuationAfterQuotes = (text: string): string => {
-  return text.replace(/([「『（\(].*?[」』）\)])/gu, (match) => {
-    return match.replace(
-      /([、。\.])([」』）\)])/gu,
-      (innerMatch, punctuation, closingBracket) => {
-        return closingBracket; // 句読点を削除して終了記号のみ返す
+  const result: string[] = [];
+  let hasOpeningBracket = false;
+  let segmentStart = 0;
+
+  for (let index = 0; index < text.length; index++) {
+    const char = text[index];
+    if (char === "\n" || char === "\r" || char === "\u2028" || char === "\u2029") {
+      hasOpeningBracket = false;
+    } else if (char === "「" || char === "『" || char === "（" || char === "(") {
+      hasOpeningBracket = true;
+    } else if (char === "」" || char === "』" || char === "）" || char === ")") {
+      if (hasOpeningBracket) {
+        const previousChar = text[index - 1];
+        if (previousChar === "、" || previousChar === "。" || previousChar === ".") {
+          result.push(text.slice(segmentStart, index - 1));
+          segmentStart = index;
+        }
+        // 最初の閉じ括弧でマッチを終え、次の文字から探す
+        hasOpeningBracket = false;
       }
-    );
-  });
+    }
+  }
+
+  result.push(text.slice(segmentStart));
+  return result.join("");
 };
 
 // 行末以外、!?の後に全角スペースを挿入
 const insertSpaceAfterMixedExclamations = (text: string): string => {
   return text.replace(
-    /([!！\?？]{1,})(?=\S(?![」』）\)]|$))/gu,
+    /([!！\?？]{1,})(?![!！\?？])(?=\S(?![」』）\)]|$))/gu,
     (match, p1, offset, string) => {
       const nextCharIndex = offset + p1.length;
       const nextChar = string[nextCharIndex];

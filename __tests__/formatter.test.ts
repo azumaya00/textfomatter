@@ -78,6 +78,29 @@ describe("formatText - 単体テスト", () => {
     );
   });
 
+  it("removePunctuationAfterQuotes: 閉じ括弧がない開き括弧20万個を1秒以内に処理する", () => {
+    const input = "「".repeat(200000);
+    const options = createOptions({ removePunctuationAfterQuotes: true });
+    const start = performance.now();
+    const output = formatText(input, options);
+    const elapsed = performance.now() - start;
+
+    expect(output).toBe(input);
+    expect(elapsed).toBeLessThan(1000);
+  });
+
+  it("removePunctuationAfterQuotes: 行をまたぐ括弧では句読点を削除しない", () => {
+    const input = "「こんにちは。\n」";
+    const options = createOptions({ removePunctuationAfterQuotes: true });
+    expect(formatText(input, options)).toBe(input);
+  });
+
+  it("removePunctuationAfterQuotes: 開き括弧がない場合は句読点を削除しない", () => {
+    const input = "こんにちは。」";
+    const options = createOptions({ removePunctuationAfterQuotes: true });
+    expect(formatText(input, options)).toBe(input);
+  });
+
   it("insertSpaceAfterExclamations: 行末以外の半角!や?の後に全角スペースを挿入する", () => {
     const input = "Hello!How are you?";
     const options = createOptions({ insertSpaceAfterExclamations: true });
@@ -122,6 +145,30 @@ describe("formatText - 単体テスト", () => {
     const input = "Hello!How?Wow!";
     const options = createOptions({ insertSpaceAfterExclamations: true });
     expect(formatText(input, options)).toBe("Hello!　How?　Wow!");
+  });
+
+  it("insertSpaceAfterExclamations: 連続する全角感嘆符の直後が改行なら変更しない", () => {
+    const input = "すごい！！\n次";
+    const options = createOptions({ insertSpaceAfterExclamations: true });
+    expect(formatText(input, options)).toBe(input);
+  });
+
+  it("insertSpaceAfterExclamations: 連続する全角感嘆符の直後が全角スペースなら変更しない", () => {
+    const input = "すごい！！　次";
+    const options = createOptions({ insertSpaceAfterExclamations: true });
+    expect(formatText(input, options)).toBe(input);
+  });
+
+  it("insertSpaceAfterExclamations: 全角感嘆符と疑問符の連続の直後が改行なら変更しない", () => {
+    const input = "すごい！！？\n次";
+    const options = createOptions({ insertSpaceAfterExclamations: true });
+    expect(formatText(input, options)).toBe(input);
+  });
+
+  it("insertSpaceAfterExclamations: 連続する半角感嘆符の直後が改行なら変更しない", () => {
+    const input = "Wow!!\nx";
+    const options = createOptions({ insertSpaceAfterExclamations: true });
+    expect(formatText(input, options)).toBe(input);
   });
 
   it("ensureEvenPunctuationCount: 奇数個の…や―を偶数個に揃える", () => {
