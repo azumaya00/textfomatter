@@ -9,9 +9,10 @@
 body { margin: 0; }
 button, textarea { font: inherit; }
 .page { max-width: 1220px; margin: auto; padding: clamp(24px, 5vw, 64px); }
-.site-header { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: 48px; }
+.site-header { margin-bottom: 48px; }
 .library-name { margin: 0 0 16px; color: #166a76; font-size: .88rem; font-weight: 700; letter-spacing: .06em; }
-h1 { margin: 0; font-size: clamp(2rem, 4.5vw, 3.5rem); line-height: 1.25; letter-spacing: -.035em; }
+h1 { margin: 0; font-size: clamp(1.125rem, 5vw, 3.5rem); line-height: 1.25; letter-spacing: -.06em; white-space: nowrap; }
+.header-details { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
 .intro { max-width: 35em; margin: 18px 0 0; line-height: 1.8; }
 .library-info { flex: 0 0 auto; padding-bottom: 4px; }
 .library-info p { margin: 0 0 8px; font-size: .88rem; font-weight: 700; }
@@ -42,7 +43,8 @@ button.primary:hover { background: #0e5661; }
 .option input:checked + .switch::after { transform: translateX(18px); }
 .option input:focus-visible + .switch { outline: 3px solid #f3a944; outline-offset: 3px; }
 @media (max-width: 800px) {
-  .site-header { align-items: start; flex-direction: column; gap: 24px; margin-bottom: 28px; }
+  .site-header { margin-bottom: 28px; }
+  .header-details { align-items: start; flex-direction: column; gap: 24px; }
   .workspace { grid-template-columns: 1fr; }
   textarea { min-height: 320px; }
 }
