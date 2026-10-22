@@ -1,49 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Text Formatter Test</title>
-</head>
-<body>
-  <h1>Text Formatter Test</h1>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="日本語の小説を横書き向けに整形する jp-novel-formatter のデモです。">
+    <title>文章整形デモ | jp-novel-formatter</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="index.js"></script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div>
+          <p class="library-name">jp-novel-formatter</p>
+          <h1>ボタンひとつで小説の体裁が整います</h1>
+          <p class="intro">日本語の横書き小説を整形するライブラリです。<br />情熱のまま書き綴った文章を入力し必要な項目を選んで整形するボタンを押せば、ルールに則った小説本文が出来上がります。</p>
+        </div>
+        <div class="library-info">
+          <p>ライブラリを使う</p>
+          <code>npm install jp-novel-formatter</code>
+          <nav aria-label="ライブラリへのリンク">
+            <a href="https://www.npmjs.com/package/jp-novel-formatter">npm</a>
+            <a href="https://github.com/azumaya00/jp-novel-formatter">GitHub</a>
+          </nav>
+        </div>
+      </header>
 
-  <h2>入力テキスト</h2>
-  <textarea id="inputText" rows="10" cols="50" placeholder="ここにテキストを入力してください"></textarea>
-  
-  <h2>フォーマットオプション</h2>
-  <form id="optionsForm">
-    <label>
-      <input type="checkbox" id="convertFullWidthToHalfWidth" checked>
-      英数字を全角から半角に変換
-    </label><br>
-    <label>
-      <input type="checkbox" id="convertHalfWidthToFullWidth" checked>
-      !?()を半角から全角に変換
-    </label><br>
-    <label>
-      <input type="checkbox" id="removePunctuationAfterQuotes" checked>
-      「」『』（）()の終わりにある句読点を削除
-    </label><br>
-    <label>
-      <input type="checkbox" id="insertSpaceAfterExclamations" checked>
-      行末以外、!?の後に全角スペースを挿入
-    </label><br>
-    <label>
-      <input type="checkbox" id="ensureEvenPunctuationCount" checked>
-      …―の連続が奇数個の場合偶数個にする
-    </label><br>
-    <label>
-      <input type="checkbox" id="insertSpaceAtLineStart" checked>
-      文頭に全角スペースを挿入
-    </label>
-  </form>
-  
-  <button id="formatButton">フォーマットを実行</button>
+      <main class="workspace">
+        <section class="editor" aria-labelledby="editor-heading">
+          <div class="section-heading">
+            <h2 id="editor-heading">文章</h2>
+            <p>整形すると、この欄の文章が書き換わります。</p>
+          </div>
+          <textarea id="text" aria-label="整形する文章" placeholder="ここに文章を入力してください" spellcheck="false"></textarea>
+          <div class="actions">
+            <button id="formatButton" class="primary" type="button">整形する</button>
+            <button id="copyButton" type="button">文章をコピーする</button>
+            <button id="clearButton" type="button">文章を空にする</button>
+          </div>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+        </section>
 
-  <h2>フォーマット結果</h2>
-  <textarea id="outputText" rows="10" cols="50" readonly placeholder="フォーマット結果がここに表示されます"></textarea>
-
-  <script type="module" src="index.js"></script>
-</body>
+        <section class="options" aria-labelledby="options-heading">
+          <div class="section-heading">
+            <h2 id="options-heading">整形オプション</h2>
+            <p>初期状態ではすべてオンです。</p>
+          </div>
+          <div class="option-list">
+            <label class="option"><span>英数字を全角から半角に変換</span><input type="checkbox" id="convertFullWidthToHalfWidth" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option"><span>特定の記号（!?()）を半角から全角に変換</span><input type="checkbox" id="convertHalfWidthToFullWidth" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option"><span>引用符の直前にある句読点を削除</span><input type="checkbox" id="removePunctuationAfterQuotes" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option"><span>行末・引用符の直前以外で、!? の後に全角スペースを挿入</span><input type="checkbox" id="insertSpaceAfterExclamations" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option"><span>… や ― の連続を偶数個に揃える</span><input type="checkbox" id="ensureEvenPunctuationCount" checked><span class="switch" aria-hidden="true"></span></label>
+            <label class="option"><span>引用符以外で始まる文頭に全角スペースを挿入</span><input type="checkbox" id="insertSpaceAtLineStart" checked><span class="switch" aria-hidden="true"></span></label>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
 </html>

@@ -11,8 +11,8 @@ node_modules/
 .idea/
 .vscode/
 
-# npm package lock file (optional)
-package-lock.json
+# GitHub Pages build output
+/_site/
 
 # MacOS specific files
 .DS_Store

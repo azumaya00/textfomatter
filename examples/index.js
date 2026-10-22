@@ -1,45 +1,35 @@
-import { formatText } from "../dist/esm/formatter.js"; // formatter.js をインポート
+import { formatText } from "../dist/esm/index.js";
 
-// ボタンが取得できているか確認
-const formatButton = document.getElementById("formatButton");
-console.log("Format Button:", formatButton);
+const text = document.getElementById("text");
+const status = document.getElementById("status");
+const optionIds = [
+  "convertFullWidthToHalfWidth",
+  "convertHalfWidthToFullWidth",
+  "removePunctuationAfterQuotes",
+  "insertSpaceAfterExclamations",
+  "ensureEvenPunctuationCount",
+  "insertSpaceAtLineStart",
+];
 
-if (formatButton) {
-  formatButton.addEventListener("click", () => {
-    console.log("Format button clicked!");
+document.getElementById("formatButton").addEventListener("click", () => {
+  const options = Object.fromEntries(
+    optionIds.map((id) => [id, document.getElementById(id).checked]),
+  );
+  text.value = formatText(text.value, options);
+  status.textContent = "整形しました";
+});
 
-    // 入力テキストを取得
-    const inputText = document.getElementById("inputText")?.value;
-    console.log("Input Text:", inputText);
+document.getElementById("copyButton").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(text.value);
+    status.textContent = "コピーしました";
+  } catch {
+    status.textContent = "コピーできませんでした。文章を選択してコピーしてください。";
+  }
+});
 
-    // チェックボックスの状態からオプションを設定
-    const options = {
-      convertFullWidthToHalfWidth: document.getElementById("convertFullWidthToHalfWidth")?.checked,
-      convertHalfWidthToFullWidth: document.getElementById("convertHalfWidthToFullWidth")?.checked,
-      removePunctuationAfterQuotes: document.getElementById("removePunctuationAfterQuotes")?.checked,
-      insertSpaceAfterExclamations: document.getElementById("insertSpaceAfterExclamations")?.checked,
-      ensureEvenPunctuationCount: document.getElementById("ensureEvenPunctuationCount")?.checked,
-      insertSpaceAtLineStart: document.getElementById("insertSpaceAtLineStart")?.checked,
-    };
-    console.log("Options:", options);
-
-    // フォーマットを実行
-    try {
-      const formattedText = formatText(inputText, options);
-      console.log("Formatted Text:", formattedText);
-
-      // 結果を出力テキストエリアに表示
-      const outputTextArea = document.getElementById("outputText");
-      if (outputTextArea) {
-        outputTextArea.value = formattedText;
-        console.log("Output updated.");
-      } else {
-        console.error("Output text area not found.");
-      }
-    } catch (error) {
-      console.error("Error during formatting:", error);
-    }
-  });
-} else {
-  console.error("Format button not found.");
-}
+document.getElementById("clearButton").addEventListener("click", () => {
+  text.value = "";
+  status.textContent = "文章を空にしました";
+  text.focus();
+});
