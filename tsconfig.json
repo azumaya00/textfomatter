@@ -1,18 +1,17 @@
 {
   "compilerOptions": {
     "target": "ESNext",           // 最新のJavaScript機能をサポート
-    "module": "ESNext",           // モジュールシステムをESNextに
+    "module": "NodeNext",         // Node.js の ESM として出力
     "strict": true,               // 厳密な型チェックを有効
     "esModuleInterop": true,      // ESモジュールとの互換性を向上
     "skipLibCheck": true,         // 型定義ファイルのチェックをスキップ
-    "outDir": "./dist",           // トランスパイル結果の出力先
+    "outDir": "./dist/esm",       // ESM の出力先
     "rootDir": "./src",           // ソースコードのルート
-    "moduleResolution": "node",  // モジュール解決方法をNode.js互換に
+    "moduleResolution": "NodeNext", // Node.js の ESM 解決方法
     "allowJs": false,             // JavaScriptファイルのコンパイルを無効化
     "declaration": true,          // 型定義ファイル（.d.ts）の生成
-    "declarationMap": true        // 型定義ファイルのソースマップを生成
+    "declarationMap": false       // 公開しない src/ への参照を含むマップは生成しない
   },
   "include": ["src"],              // トランスパイル対象ディレクトリ
   "exclude": ["node_modules"]      // 除外ディレクトリ
 }
-

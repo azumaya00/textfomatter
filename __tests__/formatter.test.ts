@@ -1,4 +1,4 @@
-import { formatText } from "../src/formatter";
+import { defaultFormatOptions, formatText } from "../src/formatter";
 
 interface FormatOptions {
   convertFullWidthToHalfWidth: boolean;
@@ -28,6 +28,43 @@ const createOptions = (
 });
 
 describe("formatText - 単体テスト", () => {
+  const allOnInput = "Ａ!…\n「x。」";
+  const allOnOutput = "　A！　……\n「x」";
+
+  it("オプション省略時は6項目すべてオン", () => {
+    expect(formatText(allOnInput)).toBe(allOnOutput);
+    expect(Object.values(defaultFormatOptions)).toEqual(Array(6).fill(true));
+  });
+
+  it("空のオプションも6項目すべてオン", () => {
+    expect(formatText(allOnInput, {})).toBe(allOnOutput);
+  });
+
+  it("一部指定では指定項目だけを上書きする", () => {
+    expect(formatText(allOnInput, { insertSpaceAtLineStart: false })).toBe(
+      "A！　……\n「x」"
+    );
+  });
+
+  it("undefined の項目は初期値のオンとして扱う", () => {
+    expect(formatText(allOnInput, { convertFullWidthToHalfWidth: undefined })).toBe(
+      allOnOutput
+    );
+  });
+
+  it("6項目指定時は従来の結果を保つ", () => {
+    expect(formatText("ＡＢＣ１２３", createOptions({ convertFullWidthToHalfWidth: true }))).toBe(
+      "ABC123"
+    );
+  });
+
+  it("公開した初期値の書き換えは整形結果に影響しない", () => {
+    expect(() => {
+      (defaultFormatOptions as FormatOptions).insertSpaceAtLineStart = false;
+    }).toThrow(TypeError);
+    expect(formatText(allOnInput)).toBe(allOnOutput);
+  });
+
   it("convertFullWidthToHalfWidth: 全角英数字を半角に変換する", () => {
     const input = "ＡＢＣ１２３";
     const options = createOptions({ convertFullWidthToHalfWidth: true });

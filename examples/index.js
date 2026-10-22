@@ -1,4 +1,4 @@
-import { formatText } from "../dist/formatter.js"; // formatter.js をインポート
+import { formatText } from "../dist/esm/formatter.js"; // formatter.js をインポート
 
 // ボタンが取得できているか確認
 const formatButton = document.getElementById("formatButton");

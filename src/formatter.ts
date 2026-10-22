@@ -7,28 +7,43 @@ export interface FormatOptions {
   insertSpaceAtLineStart: boolean; // 文頭に全角スペースを挿入
 }
 
-export const formatText = (text: string, options: FormatOptions): string => {
+export const defaultFormatOptions: Readonly<FormatOptions> = Object.freeze({
+  convertFullWidthToHalfWidth: true,
+  convertHalfWidthToFullWidth: true,
+  removePunctuationAfterQuotes: true,
+  insertSpaceAfterExclamations: true,
+  ensureEvenPunctuationCount: true,
+  insertSpaceAtLineStart: true,
+});
+
+export const formatText = (text: string, options?: Partial<FormatOptions>): string => {
+  const resolvedOptions: FormatOptions = { ...defaultFormatOptions, ...options };
+  for (const key of Object.keys(defaultFormatOptions) as (keyof FormatOptions)[]) {
+    if (resolvedOptions[key] === undefined) {
+      resolvedOptions[key] = defaultFormatOptions[key];
+    }
+  }
   let formattedText = text;
 
   // 必要なオプションをオンにして処理をまとめる
   const operations = [];
 
-  if (options.convertFullWidthToHalfWidth) {
+  if (resolvedOptions.convertFullWidthToHalfWidth) {
     operations.push(convertFullWidthToHalfWidth);
   }
-  if (options.convertHalfWidthToFullWidth) {
+  if (resolvedOptions.convertHalfWidthToFullWidth) {
     operations.push(convertHalfWidthToFullWidth);
   }
-  if (options.removePunctuationAfterQuotes) {
+  if (resolvedOptions.removePunctuationAfterQuotes) {
     operations.push(removePunctuationAfterQuotes);
   }
-  if (options.insertSpaceAfterExclamations) {
+  if (resolvedOptions.insertSpaceAfterExclamations) {
     operations.push(insertSpaceAfterMixedExclamations);
   }
-  if (options.ensureEvenPunctuationCount) {
+  if (resolvedOptions.ensureEvenPunctuationCount) {
     operations.push(ensureEvenPunctuationCount);
   }
-  if (options.insertSpaceAtLineStart) {
+  if (resolvedOptions.insertSpaceAtLineStart) {
     operations.push(insertSpaceAtLineStart);
   }
 
